@@ -1,0 +1,13 @@
+{
+  "name": "PresenceMonitor",
+  "version": "0.0.1",
+  "description": "Monitor who's home",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gideon Farrell <me@gideonfarrell.co.uk>",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}
