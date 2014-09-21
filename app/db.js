@@ -4,6 +4,26 @@ var _     = require('lodash');
 var DB = {
     client: redis.createClient(),
 
+    set: function(key, value, cb) {
+        this.client.set(key, value, function(err, reply) {
+            if(err) throw new Error('DB.set: ' + err);
+
+            if(_.isFunction(cb)) {
+                cb();
+            }
+        });
+    },
+
+    get: function(key, cb) {
+        this.client.get(key, function(err, reply) {
+            if(err) throw new Error('DB.get: ' + err);
+
+            if(_.isFunction(cb)) {
+                cb(reply);
+            }
+        });
+    },
+
     pushObject: function(type, obj, cb) {
         var objKey = _.has(obj, 'id') ? type + ':' + obj.id : type;
         var data   = [objKey].concat(this.getRedisHashFromObj(obj));
