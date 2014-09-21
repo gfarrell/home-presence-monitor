@@ -1,6 +1,6 @@
 {
   "name": "PresenceMonitor",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Monitor who's home",
   "main": "main.js",
   "scripts": {
