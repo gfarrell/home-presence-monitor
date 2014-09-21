@@ -8,6 +8,10 @@
   },
   "author": "Gideon Farrell <me@gideonfarrell.co.uk>",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "moment": "^2.8.3",
+    "redis": "^0.12.1"
+  },
   "devDependencies": {}
 }
