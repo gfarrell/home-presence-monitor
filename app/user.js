@@ -11,25 +11,62 @@ User.create = function(username) {
     return u;
 };
 
+User.all = function(cb) {
+    DB.pullSet('users', function(set) {
+        var users = [];
+        var c = 0;
+
+        var incr = function(usr) {
+            users.push(usr);
+        };
+
+        set.forEach(function(id) {
+            User.create(id).pull(incr);
+        });
+
+        var timer = setInterval(function() {
+            if(c > 1000) {
+                clearInterval(timer);
+                throw new Error('Unable to fetch all users... timed out.');
+            } else {
+                if(users.length == set.length) {
+                    clearInterval(timer);
+                    if(_.isFunction(cb)) {
+                        cb(users);
+                    }
+                } else {
+                    c++;
+                }
+            }
+        }, 2);
+    });
+};
+
 _.extend(User.prototype, {
     pull: function(cb) {
+        var self = this;
+
         DB.pullObject('user', this.id, function(data) {
             if(data === null) {
                 // no such user
             } else {
-                _.merge(this, data);
+                _.merge(self, data);
             }
 
-            if(_.isFunction(cb)) cb.call(this, this);
-        }.bind(this));
+            if(_.isFunction(cb)) cb.call(self, self);
+        });
 
         return this;
     },
 
     push: function(cb) {
+        var self = this;
+
         DB.pushObject('user', this, function() {
-            if(_.isFunction(cb)) cb.call(this, this);
-        }.bind(this));
+            DB.pushSet('users', self.id, function() {
+                if(_.isFunction(cb)) cb.call(self, self);
+            });
+        });
 
         return this;
     },
