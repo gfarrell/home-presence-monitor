@@ -3,7 +3,7 @@ Presence Monitor
 
 Checks who's home using WiFi MAC addresses of devices. Requires a locally running **redis** server.
 
-## Usage:
+## Usage
 
     node main.js
 
