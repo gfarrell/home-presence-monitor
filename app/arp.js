@@ -21,7 +21,13 @@ module.exports = {
     },
 
     parse: function(data) {
-        var pattern = /(([a-zA-Z0-9]{2}\:?){6})/g;
-        return data.match(pattern);
+        var pattern = /\s(([a-zA-Z0-9]{1,2}\:){5}[a-zA-Z0-9]{1,2})\s/g;
+        var matches = data.match(pattern);
+        var out = [];
+        matches.forEach(function(match) {
+            out.push(match.trim());
+        });
+
+        return out;
     }
 };

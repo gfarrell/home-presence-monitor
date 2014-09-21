@@ -1,4 +1,4 @@
 {
-    "data_refresh_interval": 60,
-    "user_max_age": 300
+    "data_refresh_interval": 30000,
+    "user_max_age": 300000
 }

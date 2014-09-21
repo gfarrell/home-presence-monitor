@@ -9,6 +9,7 @@
   "author": "Gideon Farrell <me@gideonfarrell.co.uk>",
   "license": "ISC",
   "dependencies": {
+    "froute": "0.0.13",
     "lodash": "^2.4.1",
     "moment": "^2.8.3",
     "redis": "^0.12.1"
