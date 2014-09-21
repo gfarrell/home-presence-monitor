@@ -1,49 +1,44 @@
-var _      = require('lodash');
-var redis  = require('redis');
-var client = redis.createClient();
+var _  = require('lodash');
+var DB = require('./db');
 
 var User = function() {
-    this.username = this.device = this.last_seen = null;
+    this.id = this.device = this.last_seen = null;
 };
 
 User.create = function(username) {
     var u = new User();
-    u.username = username;
+    u.id = username;
     return u;
-};
-
-User.exists = function(username, cb) {
-    client.exists('user:' + username, cb);
 };
 
 _.extend(User.prototype, {
     pull: function(cb) {
-        client.hmget(['user:' + this.username, 'device', 'last_seen'], function(err, repl) {
-            if(repl === null) {
-                // user does not exist
-                // maybe do something?
+        DB.pullObject('user', this.id, function(data) {
+            if(data === null) {
+                // no such user
             } else {
-                this.device    = repl[0];
-                this.last_seen = repl[1];
+                _.merge(this, data);
             }
 
             if(_.isFunction(cb)) cb.call(this, this);
         }.bind(this));
+
+        return this;
     },
 
     push: function(cb) {
-        var data = ['user:' + this.username];
+        DB.pushObject('user', this, function() {
+            if(_.isFunction(cb)) cb.call(this, this);
+        }.bind(this));
 
-        if(!_.isNull(this.device)) data.push('device', this.device);
-        if(!_.isNull(this.last_seen)) data.push('last_seen', this.last_seen);
+        return this;
+    },
 
-        client.hmset(data, function(err, repl) {
-            if(err) {
-                throw new Error('Unable to push user ' + username);
-            } else {
-                if(_.isFunction(cb)) cb.call(this, this);
-            }
-        });
+    updateLastSeen: function(lastSeen, cb) {
+        this.last_seen = lastSeen;
+        this.push(cb);
+
+        return this;
     }
 });
 
