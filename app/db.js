@@ -47,6 +47,28 @@ var DB = {
         return this;
     },
 
+    pushSet: function(name, items, cb) {
+        if(!_.isArray(items)) items = [items];
+
+        this.client.sadd(name, items, function(err, reply) {
+            if(err) throw new Error('DB.pushSet: ' + err);
+
+            if(_.isFunction(cb)) cb(items);
+        });
+
+        return this;
+    },
+
+    pullSet: function(name, cb) {
+        this.client.smembers(name, function(err, reply) {
+            if(err) throw new Error('DB.pullSet: ' + err);
+
+            if(_.isFunction(cb)) cb(reply);
+        });
+
+        return this;
+    },
+
     getRedisHashFromObj: function(obj) {
         var a = [];
 
